@@ -75,15 +75,23 @@ function Menu() {
   const numPizzas = pizzas.length;
 
   return (
+    //this className below can also be written ==>    className={`menu`}
     <main className="menu">
       <h2>Our Menu</h2>
 
-      {numPizzas > 0 ? (
-        <ul className="pizzas">
-          {pizzaData.map((pizza) => (
-            <Pizza pizzaObj={pizza} key={pizza.name}></Pizza>
-          ))}
-        </ul>
+      {numPizzas > 0 ? ( //if there is at least one pizza  in our array pizzaData
+        <>
+          <p>
+            Authentic Italian cuisine. 6 creative dishes to choose from. All
+            from our stone oven, all organic, all delicious.
+          </p>
+
+          <ul className="pizzas">
+            {pizzaData.map((pizza) => (
+              <Pizza pizzaObj={pizza} key={pizza.name}></Pizza>
+            ))}
+          </ul>
+        </>
       ) : (
         <p>We're still working on our menu. Please come back later.</p>
       )}
@@ -91,15 +99,18 @@ function Menu() {
   );
 }
 
-function Pizza(props) {
-  if (props.pizzaObj.soldOut) return null;
+function Pizza({ pizzaObj }) {
+  // if (pizzaObj.soldOut) return null;       this means if the pizza.soldout=true then we dont return anythign to the page
   return (
-    <li className="pizza">
-      <img src={props.pizzaObj.photoName} alt={props.pizzaObj.name}></img>
+    //this li below has a classname of pizza already and after that it says in the ${} that
+    //if pizzaObj is soldout then we use the className 'sold-out' to appply the grey css
+    //else it will just be an empty string with no new added css classname
+    <li className={`pizza ${pizzaObj.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObj.photoName} alt={pizzaObj.name}></img>
       <div>
-        <h3>{props.pizzaObj.name}</h3>
-        <p>{props.pizzaObj.ingredients}</p>
-        <span>{props.pizzaObj.price}</span>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        <span>{pizzaObj.soldOut ? "SOLD OUT" : pizzaObj.price}</span>
       </div>
     </li>
   );
@@ -118,7 +129,7 @@ function Footer() {
   return (
     <footer className="footer">
       {isOpen ? (
-        <Order closeHour={closeHour} />
+        <Order closeHour={closeHour} openHour={openHour} />
       ) : (
         <p>Sorry, We're closed, please revisit us at {openHour}:00. </p>
       )}
@@ -126,11 +137,12 @@ function Footer() {
   );
 }
 
-function Order(props) {
+function Order({ closeHour, openHour }) {
   return (
     <div className="order">
       <p>
-        We're open until {props.closeHour}:00. Come visit us or order online!
+        We're open from {openHour}:00 to {closeHour}:00. Come visit us or order
+        online!
       </p>
       <button className="btn">Order Now</button>
     </div>
